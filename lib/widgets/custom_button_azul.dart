@@ -22,7 +22,7 @@ class BotonAzul extends StatelessWidget {
       child: Container(
         width: double.infinity,
         child: Center(
-          child: Text('Ingresar'),
+          child: Text('Ingresar', style: TextStyle(color: Colors.white),),
         ),
       ),
     );

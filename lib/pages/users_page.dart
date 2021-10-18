@@ -1,8 +1,9 @@
+import 'package:chat_app_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:chat_app_flutter/models/user.dart';
+import 'package:chat_app_flutter/models/usuario.dart';
 
 class UsersPage extends StatefulWidget {
 
@@ -15,23 +16,29 @@ class _UsersPageState extends State<UsersPage> {
   RefreshController(initialRefresh: false);
 
   final users = [
-    User(uid: '1', nombre: 'Marcos', email: 'melgosa_kent@hotmail.com', online: true),
-    User(uid: '2', nombre: 'Mario', email: 'mario_kent@hotmail.com', online: true),
-    User(uid: '3', nombre: 'Marcela', email: 'maercel_kent@hotmail.com', online: false),
-    User(uid: '4', nombre: 'Mauricio', email: 'maurcio_kent@hotmail.com', online: true),
-    User(uid: '5', nombre: 'Magdalena', email: 'magda_kent@hotmail.com', online: false),
-    User(uid: '6', nombre: 'Marcia', email: 'marcia_kent@hotmail.com', online: true),
+    Usuario(uid: '1', nombre: 'Marcos', email: 'melgosa_kent@hotmail.com', online: true),
+    Usuario(uid: '2', nombre: 'Mario', email: 'mario_kent@hotmail.com', online: true),
+    Usuario(uid: '3', nombre: 'Marcela', email: 'maercel_kent@hotmail.com', online: false),
+    Usuario(uid: '4', nombre: 'Mauricio', email: 'maurcio_kent@hotmail.com', online: true),
+    Usuario(uid: '5', nombre: 'Magdalena', email: 'magda_kent@hotmail.com', online: false),
+    Usuario(uid: '6', nombre: 'Marcia', email: 'marcia_kent@hotmail.com', online: true),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi nombre', style: TextStyle(color: Colors.black54)),
+        title: Text(usuario?.nombre ?? 'Usuario', style: TextStyle(color: Colors.black54)),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(icon: Icon(Icons.exit_to_app, color: Colors.black54),
-          onPressed: () {},
+          onPressed: () {
+          Navigator.pushReplacementNamed(context, 'login');
+          AuthService.deleteToken();
+          },
         ),
         actions: [
           Container(
@@ -63,19 +70,19 @@ class _UsersPageState extends State<UsersPage> {
     );
   }
 
-  ListTile _userListTile(User user) {
+  ListTile _userListTile(Usuario user) {
     return ListTile(
-          title: Text(user.nombre!),
-          subtitle: Text(user.email!),
+          title: Text(user.nombre),
+          subtitle: Text(user.email),
           leading: CircleAvatar(
-            child: Text(user.nombre!.substring(0,2)),
+            child: Text(user.nombre.substring(0,2)),
             backgroundColor: Colors.blue[100],
           ),
           trailing: Container(
             width: 10,
               height: 10,
             decoration: BoxDecoration(
-              color: user.online! ? Colors.green[300] : Colors.red,
+              color: user.online? Colors.green[300] : Colors.red,
               borderRadius: BorderRadius.circular(100)
             ),
           ),
